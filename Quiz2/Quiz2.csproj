@@ -10,7 +10,6 @@
   <ItemGroup>
     <Folder Include="Contracts\Service Interfaces\" />
     <Folder Include="Infrastructure\Persestens\" />
-    <Folder Include="DTOs\" />
   </ItemGroup>
 
   <ItemGroup>

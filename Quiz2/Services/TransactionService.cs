@@ -1,5 +1,6 @@
 ﻿using Quiz2.Contracts.Repository_Interfaces;
 using Quiz2.Contracts.Service_Interfaces;
+using Quiz2.DTOs;
 using Quiz2.Entities;
 
 namespace Quiz2.Services;
@@ -11,15 +12,11 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
 
 
 
-    public List<Transaction> GetTransactionsByCardNumber(string cardNumber)
+    public List<GetTransactionDto> GetTransactionsByCardNumber(string cardNumber)
     {
         return _transactionRepository.GetTransactionsByCardNumber(cardNumber);
     }
 
-    public List<Transaction> GetTransactionsByCardId(int cardId)
-    {
-        return _transactionRepository.GetTransactionsByCardId(cardId);
-    }
 
     public bool TransferMoney(string sourceCardNumber, string destinationCardNumber, float amount)
     {
@@ -28,10 +25,13 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
 
         if (!sourceCard.IsActive)
             throw new Exception("The source card is not active");
-        
 
         if (!destinationCard.IsActive)
             throw new Exception("the destination card is not active");
+
+        if (amount<=0)
+            throw new Exception("The amount should be more than 0!");
+        
         
         if (sourceCard.Balance >= amount)
             sourceCard.Balance = sourceCard.Balance-amount;

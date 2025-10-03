@@ -1,4 +1,5 @@
 ﻿using Quiz2.Contracts.Repository_Interfaces;
+using Quiz2.DTOs;
 using Quiz2.Entities;
 using Quiz2.Infrastructure.Persestens;
 
@@ -13,9 +14,19 @@ public class TransactionRepository(AppDbContext context) : ITransactionRepositor
         return true;
     }
 
-    public List<Transaction> GetTransactionsByCardNumber(string cardNumber)
+    public List<GetTransactionDto> GetTransactionsByCardNumber(string cardNumber)
     {
-        return context.Transactions.Where(x => x.SourceAccount.CardNumber == cardNumber).ToList();
+        return context.Transactions
+            .Where(x => x.SourceAccount.CardNumber == cardNumber)
+            .Select(x=>new GetTransactionDto()
+            {
+                Amount = x.Amount,
+                SourceCard = x.SourceAccount.CardNumber,
+                DestinationCard = x.DestinationAccount.CardNumber,
+                TransferTime = x.TransactionDate,
+                IsSuccess = x.IsSuccessful
+                
+            }).ToList();
     }
 
     public List<Transaction> GetTransactionsByCardId(int cardId)
