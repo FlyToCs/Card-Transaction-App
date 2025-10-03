@@ -205,7 +205,8 @@ void TransactionMenu()
                     }
 
                 case "🚪 Logout":
-                    return; // برگشت به AuthenticationMenu
+                    AuthenticationMenu();
+                    break;
             }
         }
         catch (Exception e)
