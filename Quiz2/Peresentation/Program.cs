@@ -107,7 +107,7 @@ void AuthenticationMenu()
                     }
 
 
-                case 3:
+                case 2:
                     Environment.Exit(1);
                     break;
             }
