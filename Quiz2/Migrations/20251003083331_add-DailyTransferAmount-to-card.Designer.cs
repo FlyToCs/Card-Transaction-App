@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quiz2.Infrastructure.Persestens;
 
@@ -11,9 +12,11 @@ using Quiz2.Infrastructure.Persestens;
 namespace Quiz2.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251003083331_add-DailyTransferAmount-to-card")]
+    partial class addDailyTransferAmounttocard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,14 +41,11 @@ namespace Quiz2.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)");
 
-                    b.Property<float>("DailyTransferAmount")
-                        .HasColumnType("real");
+                    b.Property<int>("DailyTransferAmount")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
-
-                    b.Property<DateOnly>("LastTransferDate")
-                        .HasColumnType("date");
 
                     b.Property<string>("Password")
                         .IsRequired()

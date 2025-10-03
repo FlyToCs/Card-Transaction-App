@@ -7,6 +7,8 @@ public class Card
     public float Balance { get; set; }
     public string Password { get; set; }
     public bool IsActive { get; set; }
+    public float DailyTransferAmount { get; set; }
+    public DateOnly LastTransferDate { get; set; }
     public List<Transaction> SourceTransactions { get; set; } = [];
     public List<Transaction> DestinationTransactions { get; set; } = [];
 

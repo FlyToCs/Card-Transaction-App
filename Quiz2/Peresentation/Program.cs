@@ -16,7 +16,7 @@ ICardRepository cardRepository = new CardRepository(context);
 ITransactionRepository transactionRepository = new TransactionRepository(context);
 
 ICardService cardService = new CardService(cardRepository);
-ITransactionService transactionService = new TransactionService(transactionRepository, cardService);
+ITransactionService transactionService = new TransactionService(transactionRepository, cardService,context);
 
 
 

@@ -17,15 +17,14 @@ public class TransactionRepository(AppDbContext context) : ITransactionRepositor
     public List<GetTransactionDto> GetTransactionsByCardNumber(string cardNumber)
     {
         return context.Transactions
-            .Where(x => x.SourceAccount.CardNumber == cardNumber)
-            .Select(x=>new GetTransactionDto()
+            .Where(x => x.SourceAccount.CardNumber == cardNumber || x.DestinationAccount.CardNumber == cardNumber) 
+            .Select(x => new GetTransactionDto()
             {
                 Amount = x.Amount,
                 SourceCard = x.SourceAccount.CardNumber,
                 DestinationCard = x.DestinationAccount.CardNumber,
                 TransferTime = x.TransactionDate,
                 IsSuccess = x.IsSuccessful
-                
             }).ToList();
     }
 

@@ -8,12 +8,9 @@ public class Transaction
     public bool IsSuccessful { get; set; }
 
 
-    public Card? SourceAccount { get; set; }
-    public int? SourceAccountId { get; set; }
-    public Card? DestinationAccount { get; set; }
-    public int? DestinationAccountId { get; set; }
-
-
-
+    public Card SourceAccount { get; set; }
+    public int SourceAccountId { get; set; }
+    public Card DestinationAccount { get; set; }
+    public int DestinationAccountId { get; set; }
 
 }

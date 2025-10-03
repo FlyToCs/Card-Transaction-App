@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quiz2.Infrastructure.Persestens;
 
@@ -11,9 +12,11 @@ using Quiz2.Infrastructure.Persestens;
 namespace Quiz2.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251003083919_Chnghe-type-DailyTransferAmount-to-float")]
+    partial class ChnghetypeDailyTransferAmounttofloat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,9 +46,6 @@ namespace Quiz2.Migrations
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
-
-                    b.Property<DateOnly>("LastTransferDate")
-                        .HasColumnType("date");
 
                     b.Property<string>("Password")
                         .IsRequired()
