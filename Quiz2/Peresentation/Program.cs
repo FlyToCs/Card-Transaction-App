@@ -2,6 +2,7 @@
 
 using Bank_Management_System.Extensions;
 using Figgle.Fonts;
+using Microsoft.Identity.Client;
 using Quiz2.Contracts.Repository_Interfaces;
 using Quiz2.Contracts.Service_Interfaces;
 using Quiz2.Entities;
@@ -75,50 +76,52 @@ void AuthenticationMenu()
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(FiggleFonts.Standard.Render("Login"));
             Console.ResetColor();
-            Console.WriteLine("1. Login");
-            Console.WriteLine("2. Exit");
 
-            Console.Write("\nEnter an option: ");
-            int selectedOption = int.Parse(Console.ReadLine()!);
+            var select = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[green]Select an option[/]")
+                    .HighlightStyle("yellow")
+                    .AddChoices(new[] { "Login", "Exit" })
+            );
 
-            switch (selectedOption)
+            switch (select)
             {
-                case 1:
+                case "Login":
+                    Console.WriteLine();
+                    var cardNumber = AnsiConsole.Ask<string>("Enter your [yellow]Card Number[/]:");
+
+                    var password = AnsiConsole.Prompt(
+                        new TextPrompt<string>("Enter your [yellow]Password[/]:")
+                            .PromptStyle("red")
+                            .Secret('*')
+                    );
+
+                    var card = cardService.GetCardByNumber(cardNumber);
+                    if (card == null || card.Password != password)
                     {
-                        Console.Write("CardNumber: ");
-                        var cardNumber = Console.ReadLine()!;
-
-                        Console.Write("Password: ");
-                        var password = Console.ReadLine()!;
-
-                        var card = cardService.GetCardByNumber(cardNumber);
-                        if (card.Password == password)
-                        {
-                            currentCard = card;
-                            TransactionMenu();
-                        }
-                        else
-                        {
-                            ConsolePainter.RedMessage("the card number or password is incorrect");
-                            Console.ReadKey();
-                        }
-                        
+                        AnsiConsole.MarkupLine("[bold red]❌ The card number or password is incorrect[/]");
+                        Console.ReadKey();
                         break;
                     }
 
+                    currentCard = card;
+                    TransactionMenu();
+                    break;
 
-                case 2:
-                    Environment.Exit(1);
+                case "Exit":
+                    Environment.Exit(0);
                     break;
             }
         }
         catch (Exception e)
         {
-            ConsolePainter.RedMessage(e.Message);
+            AnsiConsole.MarkupLine($"[bold red]❌ Error: {e.Message}[/]");
             Console.ReadKey();
         }
     }
 }
+
+
 
 
 
