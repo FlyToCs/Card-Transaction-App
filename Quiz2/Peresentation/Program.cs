@@ -166,10 +166,40 @@ void TransactionMenu()
 
                 case 2:
                 {
-                    ConsolePainter.WriteTable(transactionService.GetTransactionsByCardNumber(currentCard.CardNumber),ConsoleColor.Yellow, ConsoleColor.Cyan);
+                    var transactions = transactionService.GetTransactionsByCardNumber(currentCard.CardNumber);
+
+                    if (transactions == null || !transactions.Any())
+                    {
+                        AnsiConsole.MarkupLine("[red]No transactions found for this card.[/]");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    var table = new Table();
+                    table.Border = TableBorder.Rounded;
+                    table.Title("[bold cyan]Transaction History[/]");
+                    table.AddColumn("[yellow]Amount[/]");
+                    table.AddColumn("[yellow]Source Card[/]");
+                    table.AddColumn("[yellow]Destination Card[/]");
+                    table.AddColumn("[yellow]Transfer Time[/]");
+                    table.AddColumn("[yellow]Status[/]");
+
+                    foreach (var tx in transactions)
+                    {
+                        table.AddRow(
+                            $"[green]{tx.Amount:C}[/]",
+                            tx.SourceCard,
+                            tx.DestinationCard,
+                            tx.TransferTime.ToString("yyyy-MM-dd HH:mm"),
+                            tx.IsSuccess ? "[bold green]✔ Success[/]" : "[bold red]✘ Failed[/]"
+                        );
+                    }
+
+                    AnsiConsole.Write(table);
                     Console.ReadKey();
                     break;
                 }
+
 
 
                 case 3:
