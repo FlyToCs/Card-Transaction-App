@@ -1,7 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using System.Xml;
 using Bank_Management_System.Extensions;
+using Figgle.Fonts;
 using Quiz2.Contracts.Repository_Interfaces;
 using Quiz2.Contracts.Service_Interfaces;
 using Quiz2.Entities;
@@ -9,6 +9,10 @@ using Quiz2.Enums;
 using Quiz2.Infrastructure.Persestens;
 using Quiz2.Infrastructure.Repositories;
 using Quiz2.Services;
+using Spectre.Console;
+using System;
+using System.Xml;
+Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 AppDbContext context = new AppDbContext();
 
@@ -20,6 +24,34 @@ ITransactionService transactionService = new TransactionService(transactionRepos
 
 
 
+
+Console.WriteLine("version 0.0.1");
+await AnsiConsole.Progress()
+    .Columns(new ProgressColumn[]
+    {
+        new TaskDescriptionColumn(),
+        new ProgressBarColumn(),
+        new PercentageColumn(),
+        new SpinnerColumn()
+    })
+    .StartAsync(async ctx =>
+    {
+        var dbTask = ctx.AddTask("[red]Connecting to database[/]");
+        var appTask = ctx.AddTask("[yellow]Loading application[/]");
+        var uiTask = ctx.AddTask("[green]Building UI[/]");
+
+        while (!ctx.IsFinished)
+        {
+            await Task.Delay(150);
+
+            dbTask.Increment(4.5);
+            appTask.Increment(2.5);
+            uiTask.Increment(3.5);
+        }
+    });
+
+AnsiConsole.MarkupLine("[bold cyan]✔ Application started successfully![/]");
+Console.ReadKey();
 
 
 AuthenticationMenu();
@@ -40,6 +72,9 @@ void AuthenticationMenu()
         try
         {
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(FiggleFonts.Standard.Render("Login"));
+            Console.ResetColor();
             Console.WriteLine("1. Login");
             Console.WriteLine("2. Exit");
 
@@ -94,6 +129,9 @@ void TransactionMenu()
         try
         {
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(FiggleFonts.Standard.Render("Account Panel"));
+            Console.ResetColor();
             Console.WriteLine("1. Transfer Money");
             Console.WriteLine("2. Show Transactions");
             Console.WriteLine("3. Logout");
