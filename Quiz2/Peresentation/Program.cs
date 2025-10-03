@@ -135,84 +135,82 @@ void TransactionMenu()
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(FiggleFonts.Standard.Render("Account Panel"));
             Console.ResetColor();
-            Console.WriteLine("1. Transfer Money");
-            Console.WriteLine("2. Show Transactions");
-            Console.WriteLine("3. Logout");
 
+            var select = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[bold green]Select an option[/]")
+                    .HighlightStyle("yellow")
+                    .AddChoices(new[]
+                    {
+                        "💸 Transfer Money",
+                        "📑 Show Transactions",
+                        "🚪 Logout"
+                    })
+            );
 
-            Console.Write("\nEnter an option: ");
-            int selectedOption = int.Parse(Console.ReadLine()!);
-
-            switch (selectedOption)
+            switch (select)
             {
-                case 1:
-                {
-                    Console.Write("enter the destination Card: ");
-                    var destinationCard = Console.ReadLine()!;
-
-                    Console.Write("Enter amount: ");
-                    var amount = int.Parse(Console.ReadLine()!);
-
-                    var result = transactionService.TransferMoney(currentCard.CardNumber, destinationCard, amount);
-                    if (result)
+                case "💸 Transfer Money":
                     {
-                        Console.WriteLine("the Operation finished successfully");
-                    }
-                    else
-                    {
-                        Console.WriteLine("failed");
-                    }
+                        var destinationCard = AnsiConsole.Ask<string>("[yellow]Enter destination Card:[/]");
+                        var amount = AnsiConsole.Ask<float>("[yellow]Enter amount:[/]");
 
-                    Console.ReadKey();
-                    break;
-                }
+                        var result = transactionService.TransferMoney(currentCard.CardNumber, destinationCard, amount);
 
-                case 2:
-                {
-                    var transactions = transactionService.GetTransactionsByCardNumber(currentCard.CardNumber);
+                        if (result)
+                            AnsiConsole.MarkupLine("[bold green]✔ The operation finished successfully![/]");
+                        else
+                            AnsiConsole.MarkupLine("[bold red]✘ Failed to complete the operation.[/]");
 
-                    if (transactions == null || !transactions.Any())
-                    {
-                        AnsiConsole.MarkupLine("[red]No transactions found for this card.[/]");
                         Console.ReadKey();
                         break;
                     }
 
-                    var table = new Table();
-                    table.Border = TableBorder.Rounded;
-                    table.Title("[bold cyan]Transaction History[/]");
-                    table.AddColumn("[yellow]Amount[/]");
-                    table.AddColumn("[yellow]Source Card[/]");
-                    table.AddColumn("[yellow]Destination Card[/]");
-                    table.AddColumn("[yellow]Transfer Time[/]");
-                    table.AddColumn("[yellow]Status[/]");
-
-                    foreach (var tx in transactions)
+                case "📑 Show Transactions":
                     {
-                        table.AddRow(
-                            $"[green]{tx.Amount:C}[/]",
-                            tx.SourceCard,
-                            tx.DestinationCard,
-                            tx.TransferTime.ToString("yyyy-MM-dd HH:mm"),
-                            tx.IsSuccess ? "[bold green]✔ Success[/]" : "[bold red]✘ Failed[/]"
-                        );
+                        var transactions = transactionService.GetTransactionsByCardNumber(currentCard.CardNumber);
+
+                        if (transactions == null || !transactions.Any())
+                        {
+                            AnsiConsole.MarkupLine("[red]No transactions found for this card.[/]");
+                            Console.ReadKey();
+                            break;
+                        }
+
+                        var table = new Table()
+                            .Border(TableBorder.Rounded)
+                            .Title("[bold cyan]📜 Transaction History[/]")
+                            .Expand();
+
+                        table.AddColumn("[yellow]Amount[/]");
+                        table.AddColumn("[yellow]Source Card[/]");
+                        table.AddColumn("[yellow]Destination Card[/]");
+                        table.AddColumn("[yellow]Transfer Time[/]");
+                        table.AddColumn("[yellow]Status[/]");
+
+                        foreach (var tx in transactions)
+                        {
+                            table.AddRow(
+                                $"[green]{tx.Amount:C}[/]",
+                                tx.SourceCard,
+                                tx.DestinationCard,
+                                tx.TransferTime.ToString("yyyy-MM-dd HH:mm"),
+                                tx.IsSuccess ? "[bold green]✔ Success[/]" : "[bold red]✘ Failed[/]"
+                            );
+                        }
+
+                        AnsiConsole.Write(table);
+                        Console.ReadKey();
+                        break;
                     }
 
-                    AnsiConsole.Write(table);
-                    Console.ReadKey();
-                    break;
-                }
-
-
-
-                case 3:
-                    AuthenticationMenu();
-                    break;
+                case "🚪 Logout":
+                    return; // برگشت به AuthenticationMenu
             }
         }
         catch (Exception e)
         {
-            ConsolePainter.RedMessage(e.Message);
+            AnsiConsole.MarkupLine($"[bold red]❌ Error: {e.Message}[/]");
             Console.ReadKey();
         }
     }
