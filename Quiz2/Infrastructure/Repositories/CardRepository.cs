@@ -15,4 +15,14 @@ public class CardRepository(AppDbContext context) : ICardRepository
     {
         return context.Cards.FirstOrDefault(x => x.CardNumber == cardNumber);
     }
+
+    public void Update(string cardNumber)
+    {
+        var card = context.Cards.FirstOrDefault(x => x.CardNumber == cardNumber);
+        if (card != null)
+        {
+            context.Cards.Update(card);
+            context.SaveChanges();
+        }
+    }
 }

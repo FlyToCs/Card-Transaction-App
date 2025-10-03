@@ -6,4 +6,5 @@ public interface ICardRepository
 {
     Card? GetCard(int id);
     Card? GetCardByNumber(string cardNumber);
+    void Update( string cardNumber);
 }

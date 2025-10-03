@@ -10,11 +10,25 @@ public class CardService(ICardRepository cardRepository) : ICardService
 
     public Card GetCard(int id)
     {
-        throw new NotImplementedException();
+        var card = _cardRepository.GetCard(id);
+        if (card == null)
+            throw new Exception("the card number is invalid");
+        if (card.CardNumber.Length !=16)
+            throw new Exception("the card number should be 16 number");
+        
+
+        return card;
+        
     }
 
     public Card GetCardByNumber(string cardNumber)
     {
-        throw new NotImplementedException();
+        var card = _cardRepository.GetCardByNumber(cardNumber);
+        if (card == null)
+            throw new Exception("the card number is invalid");
+        if (card.CardNumber.Length != 16)
+            throw new Exception("the card number should be 16 number");
+
+        return card;
     }
 }

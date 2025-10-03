@@ -15,4 +15,14 @@ public class TransactionRepository(AppDbContext context) : ITransactionRepositor
     {
         return context.Transactions.Where(x => x.SourceAccount.Id == cardId).ToList();
     }
+
+    public void Update(int transactionId)
+    {
+        var transaction = context.Transactions.FirstOrDefault(x => x.Id == transactionId);
+        if (transaction != null)
+        {
+            context.Transactions.Update(transaction);
+            context.SaveChanges();
+        }
+    }
 }

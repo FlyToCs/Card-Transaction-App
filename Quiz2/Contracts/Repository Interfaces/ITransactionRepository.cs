@@ -6,4 +6,5 @@ public interface ITransactionRepository
 {
     List<Transaction> GetTransactionsByCardNumber(string cardNumber);
     List<Transaction> GetTransactionsByCardId(int cardId);
+    void Update(int transactionId);
 }

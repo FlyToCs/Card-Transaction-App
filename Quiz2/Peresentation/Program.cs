@@ -2,20 +2,25 @@
 
 using Bank_Management_System.Extensions;
 using Quiz2.Contracts.Repository_Interfaces;
+using Quiz2.Contracts.Service_Interfaces;
 using Quiz2.Enums;
 using Quiz2.Infrastructure.Persestens;
 using Quiz2.Infrastructure.Repositories;
+using Quiz2.Services;
 
 AppDbContext context = new AppDbContext();
 
 ICardRepository cardRepository = new CardRepository(context);
 ITransactionRepository transactionRepository = new TransactionRepository(context);
 
+ICardService cardService = new CardService(cardRepository);
+ITransactionService transactionService = new TransactionService(transactionRepository, cardService);
 
 
 
 
 
+AuthenticationMenu();
 
 
 
@@ -48,7 +53,16 @@ void AuthenticationMenu()
 
                         Console.Write("Password: ");
                         var password = Console.ReadLine()!;
-                       
+
+                        var card = cardService.GetCardByNumber(cardNumber);
+                        if (card.Password == password)
+                            TransactionMenu();
+                        else
+                        {
+                            ConsolePainter.RedMessage("the card number or password is incorrect");
+                            Console.ReadKey();
+                        }
+                        
                         break;
                     }
 
