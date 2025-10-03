@@ -31,4 +31,9 @@ public class CardService(ICardRepository cardRepository) : ICardService
 
         return card;
     }
+
+    public void Update(Card card)
+    {
+        _cardRepository.Update(card.CardNumber);
+    }
 }

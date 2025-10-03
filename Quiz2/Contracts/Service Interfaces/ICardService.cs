@@ -6,4 +6,5 @@ public interface ICardService
 {
     Card GetCard(int id);
     Card GetCardByNumber(string cardNumber);
+    void Update(Card card);
 }

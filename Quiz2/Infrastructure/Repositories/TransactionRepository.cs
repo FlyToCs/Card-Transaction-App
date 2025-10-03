@@ -6,6 +6,13 @@ namespace Quiz2.Infrastructure.Repositories;
 
 public class TransactionRepository(AppDbContext context) : ITransactionRepository
 {
+    public bool Add(Transaction transaction)
+    {
+        context.Transactions.Add(transaction);
+        context.SaveChanges();
+        return true;
+    }
+
     public List<Transaction> GetTransactionsByCardNumber(string cardNumber)
     {
         return context.Transactions.Where(x => x.SourceAccount.CardNumber == cardNumber).ToList();
@@ -16,10 +23,10 @@ public class TransactionRepository(AppDbContext context) : ITransactionRepositor
         return context.Transactions.Where(x => x.SourceAccount.Id == cardId).ToList();
     }
 
-    public void Update(int transactionId)
+    public void Update(Transaction transaction)
     {
-        var transaction = context.Transactions.FirstOrDefault(x => x.Id == transactionId);
-        if (transaction != null)
+        var model = context.Transactions.FirstOrDefault(x => x.Id == transaction.Id);
+        if (model != null)
         {
             context.Transactions.Update(transaction);
             context.SaveChanges();

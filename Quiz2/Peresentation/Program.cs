@@ -1,8 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Xml;
 using Bank_Management_System.Extensions;
 using Quiz2.Contracts.Repository_Interfaces;
 using Quiz2.Contracts.Service_Interfaces;
+using Quiz2.Entities;
 using Quiz2.Enums;
 using Quiz2.Infrastructure.Persestens;
 using Quiz2.Infrastructure.Repositories;
@@ -28,7 +30,7 @@ AuthenticationMenu();
 
 
 
-
+Card? currentCard = null;
 
 
 void AuthenticationMenu()
@@ -56,7 +58,10 @@ void AuthenticationMenu()
 
                         var card = cardService.GetCardByNumber(cardNumber);
                         if (card.Password == password)
+                        {
+                            currentCard = card;
                             TransactionMenu();
+                        }
                         else
                         {
                             ConsolePainter.RedMessage("the card number or password is incorrect");
@@ -101,12 +106,30 @@ void TransactionMenu()
             {
                 case 1:
                 {
-                    
+                    Console.Write("enter the destination Card: ");
+                    var destinationCard = Console.ReadLine()!;
+
+                    Console.Write("Enter amount: ");
+                    var amount = int.Parse(Console.ReadLine()!);
+
+                    var result = transactionService.TransferMoney(currentCard.CardNumber, destinationCard, amount);
+                    if (result)
+                    {
+                        Console.WriteLine("the Operation finished successfully");
+                    }
+                    else
+                    {
+                        Console.WriteLine("failed");
+                    }
+
+                    Console.ReadKey();
                     break;
                 }
 
                 case 2:
                 {
+                    ConsolePainter.WriteTable(transactionService.GetTransactionsByCardNumber(currentCard.CardNumber),ConsoleColor.Yellow, ConsoleColor.Cyan);
+                    Console.ReadKey();
                     break;
                 }
 
