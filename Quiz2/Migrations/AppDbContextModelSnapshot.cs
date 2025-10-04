@@ -33,6 +33,10 @@ namespace Quiz2.Migrations
                     b.Property<float>("Balance")
                         .HasColumnType("real");
 
+                    b.Property<string>("BankName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CardNumber")
                         .IsRequired()
                         .HasMaxLength(16)
@@ -44,10 +48,20 @@ namespace Quiz2.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("LastLoginTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateOnly>("LastTransferDate")
                         .HasColumnType("date");
 
+                    b.Property<int>("LoginAttempts")
+                        .HasColumnType("int");
+
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

@@ -1,0 +1,9 @@
+﻿using Quiz2.DTOs;
+
+namespace Quiz2.Contracts.Service_Interfaces;
+
+public interface IAuthenticationService
+{
+    GetCardDto Login(string cardNumber, string password);
+
+}

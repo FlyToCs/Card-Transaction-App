@@ -102,12 +102,12 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
             sourceCard.Balance -= amount;
             sourceCard.DailyTransferAmount += amount;
             sourceCard.LastTransferDate = today;
-
-            destinationCard.Balance += amount;
-
-            _context.Cards.Update(sourceCard);
-            _context.Cards.Update(destinationCard);
-
+    
+            destinationCard.Balance += amount; 
+    
+            _cardService.Update(sourceCard);
+            _cardService.Update(destinationCard);
+    
             var transaction = new Transaction()
             {
                 Amount = amount,

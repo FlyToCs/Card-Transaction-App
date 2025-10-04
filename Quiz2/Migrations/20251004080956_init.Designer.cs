@@ -12,8 +12,8 @@ using Quiz2.Infrastructure.Persestens;
 namespace Quiz2.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251003060943_fix-entity-property")]
-    partial class fixentityproperty
+    [Migration("20251004080956_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,15 +36,35 @@ namespace Quiz2.Migrations
                     b.Property<float>("Balance")
                         .HasColumnType("real");
 
+                    b.Property<string>("BankName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CardNumber")
                         .IsRequired()
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)");
 
+                    b.Property<float>("DailyTransferAmount")
+                        .HasColumnType("real");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("LastLoginTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateOnly>("LastTransferDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("LoginAttempts")
+                        .HasColumnType("int");
+
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -64,13 +84,13 @@ namespace Quiz2.Migrations
                     b.Property<float>("Amount")
                         .HasColumnType("real");
 
-                    b.Property<int?>("DestinationAccountId")
+                    b.Property<int>("DestinationAccountId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsSuccessful")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("SourceAccountId")
+                    b.Property<int>("SourceAccountId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TransactionDate")
@@ -90,12 +110,14 @@ namespace Quiz2.Migrations
                     b.HasOne("Quiz2.Entities.Card", "DestinationAccount")
                         .WithMany("DestinationTransactions")
                         .HasForeignKey("DestinationAccountId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("Quiz2.Entities.Card", "SourceAccount")
                         .WithMany("SourceTransactions")
                         .HasForeignKey("SourceAccountId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("DestinationAccount");
 

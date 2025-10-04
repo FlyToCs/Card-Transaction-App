@@ -1,10 +1,11 @@
-﻿using Quiz2.Entities;
+﻿using Quiz2.DTOs;
+using Quiz2.Entities;
 
 namespace Quiz2.Contracts.Service_Interfaces;
 
 public interface ICardService
 {
-    Card GetCard(int id);
-    Card GetCardByNumber(string cardNumber);
-    void Update(Card card);
+    GetCardDto GetCardByNumber(string cardNumber);
+    bool UpdateLoginAttempts(string cardNumber, int attempt);
+    void Update(GetCardDto getCardDto);
 }
