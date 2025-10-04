@@ -7,24 +7,23 @@ namespace Quiz2.Services;
 public class AuthenticationService(ICardService cardService) : IAuthenticationService
 {
     private readonly ICardService _cardService = cardService;
-    public CardLoginDto Login(string userName, string password)
+    public CardLoginDto Login(string cardNumber, string password)
     {
-        var card =_cardService.GetCardByNumber(userName);
+        var card =_cardService.GetCardByNumber(cardNumber);
         if (card.Password != password)
         {
             card.LoginAttempts += 1;
             _cardService.Update(card);
             throw new Exception("Card number or password is incorrect");
         }
-            
-        if ((card.LastLoginTime - DateTime.Now).TotalHours >24 )
+        if (card.Password == password && card.LoginAttempts >= 3)
+            throw new Exception("the card has blocked, try another time");
+
+        if ((card.LastLoginTime - DateTime.Now).TotalHours >24 || card.Password == password )
         {
             card.LoginAttempts = 0;
             _cardService.Update(card);
         }
-
-        if (card.Password == password && card.LoginAttempts>=3)
-            throw new Exception("the card has blocked, try another time");
         
         return new CardLoginDto()
         {

@@ -13,6 +13,8 @@ using Quiz2.Services;
 using Spectre.Console;
 using System;
 using System.Xml;
+using Quiz2.DTOs;
+
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 AppDbContext context = new AppDbContext();
@@ -22,6 +24,7 @@ ITransactionRepository transactionRepository = new TransactionRepository(context
 
 ICardService cardService = new CardService(cardRepository);
 ITransactionService transactionService = new TransactionService(transactionRepository, cardService,context);
+IAuthenticationService authenticationService = new AuthenticationService(cardService);
 
 
 
@@ -63,7 +66,7 @@ AuthenticationMenu();
 
 
 
-Card? currentCard = null;
+CardLoginDto? currentCard = null;
 
 
 void AuthenticationMenu()
@@ -95,16 +98,12 @@ void AuthenticationMenu()
                             .PromptStyle("red")
                             .Secret('*')
                     );
+                    currentCard = authenticationService.Login(cardNumber, password);
 
                     var card = cardService.GetCardByNumber(cardNumber);
-                    if (card == null || card.Password != password)
-                    {
-                        AnsiConsole.MarkupLine("[bold red]❌ The card number or password is incorrect[/]");
-                        Console.ReadKey();
-                        break;
-                    }
 
-                    currentCard = card;
+
+                    
                     TransactionMenu();
                     break;
 
