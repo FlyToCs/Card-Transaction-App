@@ -27,6 +27,11 @@ public class CardService(ICardRepository cardRepository) : ICardService
         return _cardRepository.UpdateLoginAttempts(cardNumber, attempt);
     }
 
+    public bool ChangePassword(string cardNumber, string password)
+    {
+        return _cardRepository.UpdateCardPassword(cardNumber, password);
+    }
+
     public void Update(GetCardDto getCardDto)
     {
         _cardRepository.Update(getCardDto);

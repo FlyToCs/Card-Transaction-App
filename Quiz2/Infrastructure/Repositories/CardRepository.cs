@@ -41,6 +41,19 @@ public class CardRepository(AppDbContext context) : ICardRepository
         return false;
     }
 
+    public bool UpdateCardPassword(string cardNumber, string password)
+    {
+        var card = context.Cards.FirstOrDefault(x => x.CardNumber == cardNumber);
+        if (card != null)
+        {
+            card.Password = password;
+            context.SaveChanges();
+            return true;
+        }
+
+        return false;
+    }
+
     public void Update(GetCardDto getCardDto)
     {
         var card = context.Cards.FirstOrDefault(x => x.CardNumber == getCardDto.CardNumber);
