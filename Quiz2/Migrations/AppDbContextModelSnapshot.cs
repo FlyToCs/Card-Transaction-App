@@ -48,8 +48,8 @@ namespace Quiz2.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<int>("LastLoginTime")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("LastLoginTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateOnly>("LastTransferDate")
                         .HasColumnType("date");

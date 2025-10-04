@@ -1,9 +1,9 @@
-﻿namespace Quiz2.Contracts.Service_Interfaces;
+﻿using Quiz2.DTOs;
+
+namespace Quiz2.Contracts.Service_Interfaces;
 
 public interface IAuthenticationService
 {
-    // public bool Login(string userName, string password)
-    // {
-    //
-    // }
+    CardLoginDto Login(string userName, string password);
+
 }

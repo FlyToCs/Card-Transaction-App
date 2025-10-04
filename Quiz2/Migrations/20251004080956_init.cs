@@ -18,9 +18,15 @@ namespace Quiz2.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CardNumber = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
+                    BankName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PersonName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Balance = table.Column<float>(type: "real", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    DailyTransferAmount = table.Column<float>(type: "real", nullable: false),
+                    LoginAttempts = table.Column<int>(type: "int", nullable: false),
+                    LastLoginTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastTransferDate = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -35,20 +41,13 @@ namespace Quiz2.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Amount = table.Column<float>(type: "real", nullable: false),
                     TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    SourceAccountId = table.Column<int>(type: "int", nullable: true),
-                    DestinationAccountId = table.Column<int>(type: "int", nullable: true),
                     IsSuccessful = table.Column<bool>(type: "bit", nullable: false),
-                    CardId = table.Column<int>(type: "int", nullable: false)
+                    SourceAccountId = table.Column<int>(type: "int", nullable: false),
+                    DestinationAccountId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Transactions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Transactions_Cards_CardId",
-                        column: x => x.CardId,
-                        principalTable: "Cards",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Transactions_Cards_DestinationAccountId",
                         column: x => x.DestinationAccountId,
@@ -60,11 +59,6 @@ namespace Quiz2.Migrations
                         principalTable: "Cards",
                         principalColumn: "Id");
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Transactions_CardId",
-                table: "Transactions",
-                column: "CardId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_DestinationAccountId",
