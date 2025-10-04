@@ -66,7 +66,7 @@ AuthenticationMenu();
 
 
 
-CardLoginDto? currentCard = null;
+GetCardDto? currentCard = null;
 
 
 void AuthenticationMenu()

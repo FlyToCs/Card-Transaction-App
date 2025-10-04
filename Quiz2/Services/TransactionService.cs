@@ -107,8 +107,8 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
     
             destinationCard.Balance += amount; 
     
-            _context.Cards.Update(sourceCard);
-            _context.Cards.Update(destinationCard);
+            _cardService.Update(sourceCard);
+            _cardService.Update(destinationCard);
     
             var transaction = new Transaction()
             {

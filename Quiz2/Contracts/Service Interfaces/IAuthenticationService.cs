@@ -4,6 +4,6 @@ namespace Quiz2.Contracts.Service_Interfaces;
 
 public interface IAuthenticationService
 {
-    CardLoginDto Login(string cardNumber, string password);
+    GetCardDto Login(string cardNumber, string password);
 
 }
