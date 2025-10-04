@@ -143,6 +143,7 @@ void TransactionMenu()
                     {
                         "💸 Transfer Money",
                         "📑 Show Transactions",
+                        "🔑 Change Password",
                         "🚪 Logout"
                     })
             );
@@ -203,6 +204,14 @@ void TransactionMenu()
                         break;
                     }
 
+                case "🔑 Change Password":
+                    var oldPassword = AnsiConsole.Ask<string>("[yellow]Enter old pass: [/]");
+                    var newPassword = AnsiConsole.Ask<string>("[yellow]Enter new pass: [/]");
+
+                    cardService.ChangePassword(currentCard.CardNumber, oldPassword, newPassword);
+                    AnsiConsole.MarkupLine("[green]Password changed successfully[/]");
+                    Console.ReadKey();
+                    break;
                 case "🚪 Logout":
                     AuthenticationMenu();
                     break;

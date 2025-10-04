@@ -27,9 +27,17 @@ public class CardService(ICardRepository cardRepository) : ICardService
         return _cardRepository.UpdateLoginAttempts(cardNumber, attempt);
     }
 
-    public bool ChangePassword(string cardNumber, string password)
+    public bool ChangePassword(string cardNumber, string oldPass, string newPass)
     {
-        return _cardRepository.UpdateCardPassword(cardNumber, password);
+        var card = _cardRepository.GetCardByNumber(cardNumber);
+        if (card.Password != oldPass)
+            throw new Exception("the old pass didn't math");
+
+        if (newPass.Length!=4)
+            throw new Exception("pass length must be 4 digits");
+        
+
+        return _cardRepository.UpdateCardPassword(cardNumber, newPass);
     }
 
     public void Update(GetCardDto getCardDto)

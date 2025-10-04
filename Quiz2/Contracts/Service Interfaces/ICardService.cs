@@ -7,6 +7,6 @@ public interface ICardService
 {
     GetCardDto GetCardByNumber(string cardNumber);
     bool UpdateLoginAttempts(string cardNumber, int attempt);
-    bool ChangePassword(string cardNumber, string password);
+    bool ChangePassword(string cardNumber, string oldPass, string newPass);
     void Update(GetCardDto getCardDto);
 }
