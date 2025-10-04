@@ -69,47 +69,45 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
 
 
 
-    public bool TransferMoney(string sourceCardNumber, string destinationCardNumber, float amount) 
+
+    public bool TransferMoney(string sourceCardNumber, string destinationCardNumber, float amount)
     {
         const float dailyLimit = 250;
-    
-       
+
         using var dbTransaction = _context.Database.BeginTransaction();
         try
         {
-          
             if (amount <= 0)
                 throw new Exception("The amount should be more than 0!");
-    
+
             var sourceCard = _cardService.GetCardByNumber(sourceCardNumber);
             var destinationCard = _cardService.GetCardByNumber(destinationCardNumber);
-    
+
             if (!sourceCard.IsActive)
                 throw new Exception("The source card is not active.");
-    
+
             var today = DateOnly.FromDateTime(DateTime.Now);
             if (sourceCard.LastTransferDate != today)
             {
                 sourceCard.DailyTransferAmount = 0;
             }
-    
+
             if (sourceCard.DailyTransferAmount + amount > dailyLimit)
                 throw new Exception("Daily transfer limit exceeded.");
-    
+
             if (sourceCard.Balance < amount)
                 throw new Exception("The balance is not enough to transfer.");
-    
-         
-    
+
+       
             sourceCard.Balance -= amount;
             sourceCard.DailyTransferAmount += amount;
             sourceCard.LastTransferDate = today;
-    
-            destinationCard.Balance += amount; 
-    
+
+            destinationCard.Balance += amount;
+
             _context.Cards.Update(sourceCard);
             _context.Cards.Update(destinationCard);
-    
+
             var transaction = new Transaction()
             {
                 Amount = amount,
@@ -118,20 +116,37 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
                 IsSuccessful = true,
                 TransactionDate = DateTime.UtcNow
             };
+
             _context.Transactions.Add(transaction);
-    
-          
+
             _context.SaveChanges();
             dbTransaction.Commit();
-    
+
             return true;
         }
         catch (Exception ex)
         {
+  
             dbTransaction.Rollback();
-            throw;
+
+          
+            var failedTransaction = new Transaction()
+            {
+                Amount = amount,
+                DestinationAccountId = _cardService.GetCardByNumber(destinationCardNumber).Id,
+                SourceAccountId = _cardService.GetCardByNumber(sourceCardNumber).Id,
+                IsSuccessful = false,
+                TransactionDate = DateTime.UtcNow
+            };
+
+    
+            _context.Transactions.Add(failedTransaction);
+            _context.SaveChanges();
+
+            return false; 
         }
     }
+
 
 
 
