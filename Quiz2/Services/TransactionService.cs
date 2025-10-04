@@ -98,16 +98,22 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
             if (sourceCard.Balance < amount)
                 throw new Exception("The balance is not enough to transfer.");
 
-       
-            sourceCard.Balance -= amount;
+            //fee
+            if (amount > 1000)
+                sourceCard.Balance -= amount + (1.5f * amount);
+            
+            else
+                sourceCard.Balance -= amount + (0.5f * amount);
+            
+
             sourceCard.DailyTransferAmount += amount;
             sourceCard.LastTransferDate = today;
-    
-            destinationCard.Balance += amount; 
-    
+
+            destinationCard.Balance += amount;
+
             _cardService.Update(sourceCard);
             _cardService.Update(destinationCard);
-    
+
             var transaction = new Transaction()
             {
                 Amount = amount,
@@ -126,10 +132,10 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
         }
         catch (Exception ex)
         {
-  
+
             dbTransaction.Rollback();
 
-          
+
             var failedTransaction = new Transaction()
             {
                 Amount = amount,
@@ -139,11 +145,11 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
                 TransactionDate = DateTime.UtcNow
             };
 
-    
+
             _context.Transactions.Add(failedTransaction);
             _context.SaveChanges();
 
-            return false; 
+            return false;
         }
     }
 
