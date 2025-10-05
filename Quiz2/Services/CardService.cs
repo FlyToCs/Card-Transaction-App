@@ -12,22 +12,43 @@ public class CardService(ICardRepository cardRepository) : ICardService
 
     public GetCardDto GetCardByCardNumber(string cardNumber)
     {
-        _cardRepository.GetCardByNumber(cardNumber);
+        var card =  _cardRepository.GetCardByNumber(cardNumber);
+        if (card == null)
+            throw new Exception("the card didn't find");
+        return card;
+    }
+
+    public GetCardDetailsDto GetCardDetails(string cardNumber)
+    {
+        var card = _cardRepository.GetCardDetails(cardNumber);
+        if (card == null)
+            throw new Exception("the card didn't find");
+        return card;
     }
 
     public bool CardExist(string cardNumber, string password)
     {
-        _cardRepository.CardExist(cardNumber, password);
+        return _cardRepository.CardExist(cardNumber, password);
     }
 
     public bool CardIsActive(string cardNumber)
     {
-        _cardRepository.CardIsActive(cardNumber);
+       return _cardRepository.CardIsActive(cardNumber);
     }
 
     public float GetCardBalance(string cardNumber)
     {
         return _cardRepository.GetCardBalance(cardNumber);
+    }
+
+    public void UpdateLastTransferDate(string cardNumber, DateOnly dateOnly)
+    {
+        _cardRepository.UpdateLastTransferDate(cardNumber, dateOnly);
+    }
+
+    public void UpdateLastLoginTime(string cardNumber, DateTime datetime)
+    {
+        _cardRepository.UpdateLastLoginTime(cardNumber, datetime);
     }
 
     public int GetCardLoginAttempts(string cardNumber)
@@ -50,11 +71,9 @@ public class CardService(ICardRepository cardRepository) : ICardService
         _cardRepository.UpdateBalance(cardNumber, amount);
     }
 
-    public void ChangePassword(string cardNumber, string oldPass, string newPass)
+    public void ChangePassword(string cardNumber, string newPass)
     {
         var card = _cardRepository.GetCardByNumber(cardNumber);
-        if (card.Password != oldPass)
-            throw new Exception("the old pass didn't math");
 
         if (newPass.Length != 4)
             throw new Exception("pass length must be 4 digits");

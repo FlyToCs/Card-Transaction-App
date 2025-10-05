@@ -200,10 +200,10 @@ void TransactionMenu()
                     }
 
                 case "🔑 Change Password":
-                    var oldPassword = AnsiConsole.Ask<string>("[yellow]Enter old pass: [/]");
+                    
                     var newPassword = AnsiConsole.Ask<string>("[yellow]Enter new pass: [/]");
 
-                    cardService.ChangePassword(currentCard.CardNumber, oldPassword, newPassword);
+                    cardService.ChangePassword(currentCard.CardNumber, newPassword);
                     AnsiConsole.MarkupLine("[green]Password changed successfully[/]");
                     Console.ReadKey();
                     break;

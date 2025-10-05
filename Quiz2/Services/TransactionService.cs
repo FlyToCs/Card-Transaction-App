@@ -81,8 +81,8 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
             if (amount <= 0)
                 throw new Exception("The amount should be more than 0!");
 
-            var sourceCard = _cardService.GetCardByNumber(sourceCardNumber);
-            var destinationCard = _cardService.GetCardByNumber(destinationCardNumber);
+            var sourceCard = _cardService.GetCardDetails(sourceCardNumber);
+            var destinationCard = _cardService.GetCardDetails(destinationCardNumber);
 
             if (!sourceCard.IsActive)
                 throw new Exception("The source card is not active.");
@@ -105,21 +105,19 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
             
             else
                 sourceCard.Balance -= amount + 0.5f * amount;
-            
+            _cardService.UpdateBalance(sourceCardNumber, sourceCard.Balance);
 
+            //fix update
             sourceCard.DailyTransferAmount += amount;
             sourceCard.LastTransferDate = today;
 
             destinationCard.Balance += amount;
+            _cardService.UpdateBalance(destinationCardNumber, destinationCard.Balance);
 
-            _cardService.Update(sourceCard);
-            _cardService.Update(destinationCard);
 
             var transaction = new Transaction()
             {
                 Amount = amount,
-                DestinationAccountId = destinationCard.Id,
-                SourceAccountId = sourceCard.Id,
                 IsSuccessful = true,
                 TransactionDate = DateTime.UtcNow
             };
@@ -140,8 +138,8 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
             var failedTransaction = new Transaction()
             {
                 Amount = amount,
-                DestinationAccountId = _cardService.GetCardByNumber(destinationCardNumber).Id,
-                SourceAccountId = _cardService.GetCardByNumber(sourceCardNumber).Id,
+                DestinationAccountId = _cardService.GetCardByCardNumber(destinationCardNumber).Id,
+                SourceAccountId = _cardService.GetCardByCardNumber(sourceCardNumber).Id,
                 IsSuccessful = false,
                 TransactionDate = DateTime.UtcNow
             };
@@ -153,8 +151,4 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
             return false;
         }
     }
-
-
-
-
 }

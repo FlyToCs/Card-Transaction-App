@@ -7,12 +7,15 @@ namespace Quiz2.Contracts.Service_Interfaces;
 public interface ICardService
 {
     GetCardDto GetCardByCardNumber(string cardNumber);
+    GetCardDetailsDto GetCardDetails(string cardNumber);
     bool CardExist(string cardNumber, string password);
     bool CardIsActive(string cardNumber);
     float GetCardBalance(string cardNumber);
+    void UpdateLastTransferDate(string cardNumber, DateOnly dateOnly);
+    void UpdateLastLoginTime(string cardNumber, DateTime datetime);
     int GetCardLoginAttempts(string cardNumber);
     DateTime GetLastLoginTime(string cardNumber);
     void UpdateLoginAttempts(string cardNumber, int attempt);
     void UpdateBalance(string cardNumber, float amount);
-    void ChangePassword(string cardNumber, string oldPass, string newPass);
+    void ChangePassword(string cardNumber, string newPass);
 }

@@ -20,6 +20,19 @@ public class CardRepository(AppDbContext context) :  ICardRepository
         }).FirstOrDefault();
     }
 
+    public GetCardDetailsDto? GetCardDetails(string cardNumber)
+    {
+        return context.Cards.Select(x => new GetCardDetailsDto()
+        {
+           
+            Balance = x.Balance,
+            CardNumber = x.CardNumber,
+            IsActive = x.IsActive,
+            LastTransferDate = x.LastTransferDate,
+            DailyTransferAmount = x.DailyTransferAmount
+        }).FirstOrDefault();
+    }
+
     public bool CardExist(string cardNumber, string password)
     {
         return context.Cards.Any(c => c.CardNumber == cardNumber && c.Password == password);
@@ -66,6 +79,22 @@ public class CardRepository(AppDbContext context) :  ICardRepository
         context.Cards.Where(c => c.CardNumber == cardNumber)
             .ExecuteUpdate(setter => setter
                 .SetProperty(c => c.Password, password));
+    }
+
+    public void UpdateLastTransferDate(string cardNumber, DateOnly dateOnly)
+    {
+        context.Cards
+            .Where(c => c.CardNumber == cardNumber)
+            .ExecuteUpdate(setter => setter
+                .SetProperty(c => c.LastTransferDate, dateOnly));
+    }
+
+    public void UpdateLastLoginTime(string cardNumber, DateTime datetime)
+    {
+        context.Cards
+            .Where(c => c.CardNumber == cardNumber)
+            .ExecuteUpdate(setter => setter
+                .SetProperty(c => c.LastLoginTime, datetime));
     }
 
     public void UpdateBalance(string cardNumber, float amount)
