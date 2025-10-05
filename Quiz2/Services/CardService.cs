@@ -10,6 +10,11 @@ public class CardService(ICardRepository cardRepository) : ICardService
     private readonly ICardRepository _cardRepository = cardRepository;
 
 
+    public GetCardDto GetCardByCardNumber(string cardNumber)
+    {
+        _cardRepository.GetCardByNumber(cardNumber);
+    }
+
     public bool CardExist(string cardNumber, string password)
     {
         _cardRepository.CardExist(cardNumber, password);
@@ -23,6 +28,16 @@ public class CardService(ICardRepository cardRepository) : ICardService
     public float GetCardBalance(string cardNumber)
     {
         return _cardRepository.GetCardBalance(cardNumber);
+    }
+
+    public int GetCardLoginAttempts(string cardNumber)
+    {
+        return _cardRepository.GetCardLoginAttempt(cardNumber);
+    }
+
+    public DateTime GetLastLoginTime(string cardNumber)
+    {
+        return _cardRepository.GetLastLoginTime(cardNumber);
     }
 
     public void UpdateLoginAttempts(string cardNumber, int attempt)

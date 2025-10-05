@@ -95,7 +95,7 @@ void AuthenticationMenu()
                     );
                     currentCard = authenticationService.Login(cardNumber, password);
 
-                    var card = cardService.GetCardByNumber(cardNumber);
+                    var card = cardService.GetCardByCardNumber(cardNumber);
 
 
                     

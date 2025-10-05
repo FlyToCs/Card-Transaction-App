@@ -9,26 +9,22 @@ public class AuthenticationService(ICardService cardService) : IAuthenticationSe
     private readonly ICardService _cardService = cardService;
     public GetCardDto Login(string cardNumber, string password)
     {
-        var card =_cardService.GetCardByNumber(cardNumber);
-        if (card.Password != password)
-        {
-            var attempts = card.LoginAttempts += 1;
-            _cardService.UpdateLoginAttempts(cardNumber,attempts);
+        if (!_cardService.CardExist(cardNumber, password))
             throw new Exception("Card number or password is incorrect");
-        }
-        if (card.Password == password && card.LoginAttempts >= 3)
+
+        if (!_cardService.CardIsActive(cardNumber))
+            throw new Exception("Card number in not active");
+
+        var lastLogin = _cardService.GetLastLoginTime(cardNumber);
+        if ((lastLogin - DateTime.Now).TotalHours > 24)
+            _cardService.UpdateLoginAttempts(cardNumber, 0);
+
+        var loginAttempt = _cardService.GetCardLoginAttempts(cardNumber);
+        if (loginAttempt >= 3)
             throw new Exception("the card has blocked, try another time");
 
-        if ((card.LastLoginTime - DateTime.Now).TotalHours >24 || card.Password == password )
-            _cardService.UpdateLoginAttempts(cardNumber, 0);
-        
-        
-        return new GetCardDto()
-        {
-            CardNumber = card.CardNumber,
-            BankName = card.BankName,
-            PersonName = card.PersonName,
-        };
+
+        return _cardService.GetCardByCardNumber(cardNumber);
 
     }
 }

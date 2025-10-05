@@ -6,7 +6,7 @@ using Quiz2.Contracts.Repository_Interfaces;
 
 namespace Infrastructure.Repositories;
 
-public class CardRepository(AppDbContext context) : ICardRepository
+public class CardRepository(AppDbContext context) :  ICardRepository
 {
 
     public GetCardDto? GetCardByNumber(string cardNumber)
@@ -17,15 +17,6 @@ public class CardRepository(AppDbContext context) : ICardRepository
             BankName = x.BankName,
             CardNumber = x.CardNumber,
             PersonName = x.PersonName,
-            Password = x.Password,
-            LoginAttempts = x.LoginAttempts,
-            LastLoginTime = x.LastLoginTime,
-            Balance = x.Balance,
-            DailyTransferAmount = x.DailyTransferAmount,
-            LastTransferDate = x.LastTransferDate,
-            IsActive = x.IsActive,
-
-
         }).FirstOrDefault();
     }
 
@@ -44,6 +35,21 @@ public class CardRepository(AppDbContext context) : ICardRepository
         return context.Cards
             .Where(c => c.CardNumber == cardNumber)
             .Select(c => c.Balance)
+            .First();
+    }
+
+    public int GetCardLoginAttempt(string cardNumber)
+    {
+        return context.Cards.Where(c => c.CardNumber == cardNumber)
+            .Select(c => c.LoginAttempts)
+            .First();
+    }
+
+    public DateTime GetLastLoginTime(string cardNumber)
+    {
+        return context.Cards
+            .Where(c => c.CardNumber == cardNumber)
+            .Select(c => c.LastLoginTime)
             .First();
     }
 

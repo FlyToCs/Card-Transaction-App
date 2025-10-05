@@ -9,6 +9,8 @@ public interface ICardRepository
     bool CardExist(string cardNumber, string password);
     bool CardIsActive(string cardNumber);
     float GetCardBalance(string cardNumber);
+    int GetCardLoginAttempt(string cardNumber);
+    DateTime GetLastLoginTime(string cardNumber);
     void UpdateLoginAttempts(string cardNumber,int attempt);
     void UpdateCardPassword(string cardNumber, string password);
     void UpdateBalance(string cardNumber, float amount);
