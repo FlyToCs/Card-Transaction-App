@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Quiz2.DTOs;
+namespace DTOs;
 
 public class GetCardDto
 {

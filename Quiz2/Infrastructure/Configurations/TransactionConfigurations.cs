@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Quiz2.Entities;
 
-namespace Quiz2.Infrastructure.Configurations;
+namespace Infrastructure.Configurations;
 
 public class TransactionConfigurations : IEntityTypeConfiguration<Transaction>
 {

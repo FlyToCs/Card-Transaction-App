@@ -1,4 +1,4 @@
-﻿namespace Quiz2.DTOs;
+﻿namespace DTOs;
 
 public class GetTransactionDto
 {

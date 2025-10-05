@@ -1,4 +1,4 @@
-﻿using Quiz2.DTOs;
+﻿using DTOs;
 
 namespace Quiz2.Contracts.Service_Interfaces;
 

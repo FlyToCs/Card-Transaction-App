@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Entities;
+using DTOs;
+using Infrastructure.Persestens;
+using Microsoft.EntityFrameworkCore;
 using Quiz2.Contracts.Repository_Interfaces;
 using Quiz2.Contracts.Service_Interfaces;
-using Quiz2.DTOs;
-using Quiz2.Entities;
-using Quiz2.Infrastructure.Persestens;
 
-namespace Quiz2.Services;
+
+namespace Services;
 
 public class TransactionService(ITransactionRepository transactionRepository, ICardService cardService, AppDbContext context) : ITransactionService
 {
@@ -100,10 +101,10 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
 
             //fee
             if (amount > 1000)
-                sourceCard.Balance -= amount + (1.5f * amount);
+                sourceCard.Balance -= amount + 1.5f * amount;
             
             else
-                sourceCard.Balance -= amount + (0.5f * amount);
+                sourceCard.Balance -= amount + 0.5f * amount;
             
 
             sourceCard.DailyTransferAmount += amount;

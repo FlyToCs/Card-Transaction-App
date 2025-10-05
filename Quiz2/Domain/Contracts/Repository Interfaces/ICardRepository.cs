@@ -1,5 +1,4 @@
-﻿using Quiz2.DTOs;
-using Quiz2.Entities;
+﻿using DTOs;
 
 namespace Quiz2.Contracts.Repository_Interfaces;
 

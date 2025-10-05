@@ -1,19 +1,14 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using Bank_Management_System.Extensions;
+
 using Figgle.Fonts;
-using Microsoft.Identity.Client;
 using Quiz2.Contracts.Repository_Interfaces;
 using Quiz2.Contracts.Service_Interfaces;
-using Quiz2.Entities;
-using Quiz2.Enums;
-using Quiz2.Infrastructure.Persestens;
-using Quiz2.Infrastructure.Repositories;
-using Quiz2.Services;
 using Spectre.Console;
-using System;
-using System.Xml;
-using Quiz2.DTOs;
+using Infrastructure.Persestens;
+using DTOs;
+using Infrastructure.Repositories;
+using Services;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 

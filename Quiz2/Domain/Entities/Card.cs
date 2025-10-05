@@ -1,4 +1,4 @@
-﻿namespace Quiz2.Entities;
+﻿namespace Domain.Entities;
 
 public class Card
 {

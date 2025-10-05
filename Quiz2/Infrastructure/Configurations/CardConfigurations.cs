@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Quiz2.Entities;
 
-namespace Quiz2.Infrastructure.Configurations
+namespace Infrastructure.Configurations
 {
     internal class CardConfigurations : IEntityTypeConfiguration<Card>
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Reflection;
 
-namespace Bank_Management_System.Extensions;
+namespace Extensions;
 
 public static class ConsolePainter
 {

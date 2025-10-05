@@ -1,8 +1,8 @@
 ﻿using System.Security.AccessControl;
+using DTOs;
 using Quiz2.Contracts.Service_Interfaces;
-using Quiz2.DTOs;
 
-namespace Quiz2.Services;
+namespace Services;
 
 public class AuthenticationService(ICardService cardService) : IAuthenticationService
 {

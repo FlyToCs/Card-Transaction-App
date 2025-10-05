@@ -1,9 +1,9 @@
-﻿using Quiz2.Contracts.Repository_Interfaces;
+﻿using DTOs;
+using Quiz2.Contracts.Repository_Interfaces;
 using Quiz2.Contracts.Service_Interfaces;
-using Quiz2.DTOs;
-using Quiz2.Entities;
 
-namespace Quiz2.Services;
+
+namespace Services;
 
 public class CardService(ICardRepository cardRepository) : ICardService
 {

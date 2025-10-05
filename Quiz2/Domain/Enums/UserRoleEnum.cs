@@ -1,4 +1,4 @@
-﻿namespace Quiz2.Enums;
+﻿namespace Domain.Enums;
 
 public enum UserRoleEnum
 {

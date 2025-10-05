@@ -1,9 +1,9 @@
-﻿using Quiz2.Contracts.Repository_Interfaces;
-using Quiz2.DTOs;
-using Quiz2.Entities;
-using Quiz2.Infrastructure.Persestens;
+﻿using DTOs;
+using Infrastructure.Persestens;
+using Quiz2.Contracts.Repository_Interfaces;
 
-namespace Quiz2.Infrastructure.Repositories;
+
+namespace Infrastructure.Repositories;
 
 public class CardRepository(AppDbContext context) : ICardRepository
 {

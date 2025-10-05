@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Quiz2.Entities;
 using Quiz2.Infrastructure.Configurations;
 
-namespace Quiz2.Infrastructure.Persestens;
+namespace Infrastructure.Persestens;
 
 public class AppDbContext : DbContext
 {
