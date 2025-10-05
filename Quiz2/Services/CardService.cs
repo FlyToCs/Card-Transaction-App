@@ -51,6 +51,11 @@ public class CardService(ICardRepository cardRepository) : ICardService
         _cardRepository.UpdateLastLoginTime(cardNumber, datetime);
     }
 
+    public void UpdateDailyTransferAmount(string cardNumber, float amount)
+    {
+        _cardRepository.UpdateDailyTransferAmount(cardNumber, amount);
+    }
+
     public int GetCardLoginAttempts(string cardNumber)
     {
         return _cardRepository.GetCardLoginAttempt(cardNumber);

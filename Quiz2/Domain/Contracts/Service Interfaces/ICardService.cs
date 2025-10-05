@@ -13,6 +13,7 @@ public interface ICardService
     float GetCardBalance(string cardNumber);
     void UpdateLastTransferDate(string cardNumber, DateOnly dateOnly);
     void UpdateLastLoginTime(string cardNumber, DateTime datetime);
+    void UpdateDailyTransferAmount(string cardNumber, float amount);
     int GetCardLoginAttempts(string cardNumber);
     DateTime GetLastLoginTime(string cardNumber);
     void UpdateLoginAttempts(string cardNumber, int attempt);

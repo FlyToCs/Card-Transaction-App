@@ -97,6 +97,14 @@ public class CardRepository(AppDbContext context) :  ICardRepository
                 .SetProperty(c => c.LastLoginTime, datetime));
     }
 
+    public void UpdateDailyTransferAmount(string cardNumber, float amount)
+    {
+        context.Cards
+            .Where(c => c.CardNumber == cardNumber)
+            .ExecuteUpdate(setter => setter
+                .SetProperty(c => c.DailyTransferAmount, amount));
+    }
+
     public void UpdateBalance(string cardNumber, float amount)
     {
         context.Cards

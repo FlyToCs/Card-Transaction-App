@@ -109,7 +109,10 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
 
             //fix update
             sourceCard.DailyTransferAmount += amount;
+            _cardService.UpdateDailyTransferAmount(sourceCard.CardNumber, sourceCard.DailyTransferAmount);
+
             sourceCard.LastTransferDate = today;
+            _cardService.UpdateLastTransferDate(sourceCardNumber, today);
 
             destinationCard.Balance += amount;
             _cardService.UpdateBalance(destinationCardNumber, destinationCard.Balance);
