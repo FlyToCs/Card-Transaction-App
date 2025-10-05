@@ -1,5 +1,6 @@
 ﻿using DTOs;
 using Infrastructure.Persestens;
+using Microsoft.EntityFrameworkCore;
 using Quiz2.Contracts.Repository_Interfaces;
 
 
@@ -28,39 +29,44 @@ public class CardRepository(AppDbContext context) : ICardRepository
         }).FirstOrDefault();
     }
 
-    public bool UpdateLoginAttempts(string cardNumber, int attempt)
+    public bool CardExist(string cardNumber, string password)
     {
-        var card = context.Cards.FirstOrDefault(x => x.CardNumber == cardNumber);
-        if (card != null)
-        {
-            card.LoginAttempts = attempt;
-            context.SaveChanges();
-            return true;
-        }
-
-        return false;
+        return context.Cards.Any(c => c.CardNumber == cardNumber && c.Password == password);
     }
 
-    public bool UpdateCardPassword(string cardNumber, string password)
+    public bool CardIsActive(string cardNumber)
     {
-        var card = context.Cards.FirstOrDefault(x => x.CardNumber == cardNumber);
-        if (card != null)
-        {
-            card.Password = password;
-            context.SaveChanges();
-            return true;
-        }
-
-        return false;
+        return context.Cards.Any(c => c.CardNumber == cardNumber && c.IsActive);
     }
 
-    public void Update(GetCardDto getCardDto)
+    public float GetCardBalance(string cardNumber)
     {
-        var card = context.Cards.FirstOrDefault(x => x.CardNumber == getCardDto.CardNumber);
-        if (card != null)
-        {
-            context.Cards.Update(card);
-            context.SaveChanges();
-        }
+        return context.Cards
+            .Where(c => c.CardNumber == cardNumber)
+            .Select(c => c.Balance)
+            .First();
+    }
+
+    public void UpdateLoginAttempts(string cardNumber, int attempt)
+    {
+        context.Cards
+            .Where(c => c.CardNumber == cardNumber)
+            .ExecuteUpdate(setter => setter
+                .SetProperty(c => c.LoginAttempts, attempt));
+    }
+
+    public void UpdateCardPassword(string cardNumber, string password)
+    {
+        context.Cards.Where(c => c.CardNumber == cardNumber)
+            .ExecuteUpdate(setter => setter
+                .SetProperty(c => c.Password, password));
+    }
+
+    public void UpdateBalance(string cardNumber, float amount)
+    {
+        context.Cards
+            .Where(c => c.CardNumber == cardNumber)
+            .ExecuteUpdate(setter => setter
+                .SetProperty(c => c.Balance, amount));
     }
 }
