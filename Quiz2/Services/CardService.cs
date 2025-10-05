@@ -10,38 +10,43 @@ public class CardService(ICardRepository cardRepository) : ICardService
     private readonly ICardRepository _cardRepository = cardRepository;
 
 
-
-    public GetCardDto GetCardByNumber(string cardNumber)
+    public bool CardExist(string cardNumber, string password)
     {
-        var card = _cardRepository.GetCardByNumber(cardNumber);
-        if (card == null)
-            throw new Exception("the card number is invalid");
-        if (card.CardNumber.Length != 16)
-            throw new Exception("the card number should be 16 number");
-
-        return card;
+        _cardRepository.CardExist(cardNumber, password);
     }
 
-    public bool UpdateLoginAttempts(string cardNumber, int attempt)
+    public bool CardIsActive(string cardNumber)
     {
-        return _cardRepository.UpdateLoginAttempts(cardNumber, attempt);
+        _cardRepository.CardIsActive(cardNumber);
     }
 
-    public bool ChangePassword(string cardNumber, string oldPass, string newPass)
+    public float GetCardBalance(string cardNumber)
+    {
+        return _cardRepository.GetCardBalance(cardNumber);
+    }
+
+    public void UpdateLoginAttempts(string cardNumber, int attempt)
+    {
+        _cardRepository.UpdateLoginAttempts(cardNumber, attempt);
+    }
+
+    public void UpdateBalance(string cardNumber, float amount)
+    {
+        _cardRepository.UpdateBalance(cardNumber, amount);
+    }
+
+    public void ChangePassword(string cardNumber, string oldPass, string newPass)
     {
         var card = _cardRepository.GetCardByNumber(cardNumber);
         if (card.Password != oldPass)
             throw new Exception("the old pass didn't math");
 
-        if (newPass.Length!=4)
+        if (newPass.Length != 4)
             throw new Exception("pass length must be 4 digits");
-        
 
-        return _cardRepository.UpdateCardPassword(cardNumber, newPass);
+
+        _cardRepository.UpdateCardPassword(cardNumber, newPass);
     }
 
-    public void Update(GetCardDto getCardDto)
-    {
-        _cardRepository.Update(getCardDto);
-    }
+
 }
