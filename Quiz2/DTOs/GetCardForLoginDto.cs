@@ -6,5 +6,5 @@ public class GetCardForLoginDto
     public string Password { get; set; }
     public bool IsActive { get; set; }
     public int LoginAttempts { get; set; }
-    public DateTime LastLoginTime { get; set; }
+    public DateTime? LastLoginTime { get; set; }
 }
