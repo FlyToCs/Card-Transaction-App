@@ -28,7 +28,11 @@ public class CardService(ICardRepository cardRepository) : ICardService
 
     public GetCardForLoginDto GetCardForLoginDto(string cardNumber)
     {
-        return _cardRepository.CardForLoginDto(cardNumber);
+        var card = _cardRepository.CardForLoginDto(cardNumber);
+        if (card == null)
+            throw new Exception("the card didn't find");
+
+        return card;
     }
 
     public bool CardExist(string cardNumber, string password)

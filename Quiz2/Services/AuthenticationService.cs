@@ -10,9 +10,6 @@ public class AuthenticationService(ICardService cardService) : IAuthenticationSe
     {
         var card = cardService.GetCardForLoginDto(cardNumber);
 
-        if (card == null)
-            throw new Exception("The card number or password you entered is incorrect.");
-
         if (card.LoginAttempts >= 3)
             throw new Exception("Your card has been blocked due to multiple failed login attempts. Try again later.");
 
