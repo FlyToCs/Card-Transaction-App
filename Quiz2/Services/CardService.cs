@@ -26,6 +26,11 @@ public class CardService(ICardRepository cardRepository) : ICardService
         return card;
     }
 
+    public GetCardForLoginDto GetCardForLoginDto(string cardNumber)
+    {
+        return _cardRepository.CardForLoginDto(cardNumber);
+    }
+
     public bool CardExist(string cardNumber, string password)
     {
         return _cardRepository.CardExist(cardNumber, password);
@@ -44,6 +49,11 @@ public class CardService(ICardRepository cardRepository) : ICardService
     public void UpdateLastTransferDate(string cardNumber, DateOnly dateOnly)
     {
         _cardRepository.UpdateLastTransferDate(cardNumber, dateOnly);
+    }
+
+    public void UpdateLoginData(CardLoginUpdateDto cardLoginUpdateDto)
+    {
+        _cardRepository.UpdateLoginData(cardLoginUpdateDto);
     }
 
     public void UpdateLastLoginTime(string cardNumber, DateTime datetime)

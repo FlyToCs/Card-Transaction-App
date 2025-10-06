@@ -33,6 +33,18 @@ public class CardRepository(AppDbContext context) :  ICardRepository
         }).FirstOrDefault();
     }
 
+    public GetCardForLoginDto? CardForLoginDto(string cardNumber)
+    {
+        return context.Cards.Select(c => new GetCardForLoginDto()
+        {
+            CardNumber = c.CardNumber,
+            Password = c.Password,
+            IsActive = c.IsActive,
+            LoginAttempts = c.LoginAttempts,
+            LastLoginTime = c.LastLoginTime
+        }).FirstOrDefault();
+    }
+
     public bool CardExist(string cardNumber, string password)
     {
         return context.Cards.Any(c => c.CardNumber == cardNumber && c.Password == password);
@@ -65,6 +77,24 @@ public class CardRepository(AppDbContext context) :  ICardRepository
             .Select(c => c.LastLoginTime)
             .First();
     }
+
+    public void UpdateLoginData(CardLoginUpdateDto dto)
+    {
+        var query = context.Cards.Where(c => c.CardNumber == dto.CardNumber);
+
+        if (dto.LoginAttempt.HasValue)
+            query.ExecuteUpdate(setters => setters
+                .SetProperty(c => c.LoginAttempts, dto.LoginAttempt.Value));
+
+        if (dto.LastLogin.HasValue)
+            query.ExecuteUpdate(setters => setters
+                .SetProperty(c => c.LastLoginTime, dto.LastLogin.Value));
+
+        if (dto.IsActive.HasValue)
+            query.ExecuteUpdate(setters => setters
+                .SetProperty(c => c.IsActive, dto.IsActive.Value));
+    }
+
 
     public void UpdateLoginAttempts(string cardNumber, int attempt)
     {

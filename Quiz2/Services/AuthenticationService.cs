@@ -6,25 +6,50 @@ namespace Services;
 
 public class AuthenticationService(ICardService cardService) : IAuthenticationService
 {
-    private readonly ICardService _cardService = cardService;
     public GetCardDto Login(string cardNumber, string password)
     {
-        if (!_cardService.CardExist(cardNumber, password))
-            throw new Exception("Card number or password is incorrect");
+        var card = cardService.GetCardForLoginDto(cardNumber);
 
-        if (!_cardService.CardIsActive(cardNumber))
+        if (card == null)
+            throw new Exception("Card number or password is invalid");
+        
+
+        if (card.Password != password)
+        {
+            cardService.UpdateLoginData(new CardLoginUpdateDto
+            {
+                CardNumber = cardNumber,
+                LoginAttempt = card.LoginAttempts + 1
+            });
+            throw new Exception("Card number or password is incorrect");
+        }
+
+        if (!card.IsActive)
             throw new Exception("Card number in not active");
 
-        var lastLogin = _cardService.GetLastLoginTime(cardNumber);
-        if ((lastLogin - DateTime.Now).TotalHours > 24)
-            _cardService.UpdateLoginAttempts(cardNumber, 0);
 
-        var loginAttempt = _cardService.GetCardLoginAttempts(cardNumber);
-        if (loginAttempt >= 3)
+        if (card.LoginAttempts >= 3)
             throw new Exception("the card has blocked, try another time");
 
+        if (( DateTime.Now - card.LastLoginTime).TotalHours > 24)
+        {
+            cardService.UpdateLoginData(new CardLoginUpdateDto()
+            {
+                CardNumber = cardNumber,
+                LoginAttempt = 0
+            });
+        }
 
-        return _cardService.GetCardByCardNumber(cardNumber);
+
+
+        cardService.UpdateLoginData(new CardLoginUpdateDto
+        {
+            CardNumber = cardNumber,
+            LastLogin = DateTime.Now,
+            LoginAttempt = 0
+        });
+
+        return cardService.GetCardByCardNumber(cardNumber);
 
     }
 }

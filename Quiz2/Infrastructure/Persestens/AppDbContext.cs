@@ -1,7 +1,8 @@
 ﻿using Domain.Entities;
+using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Quiz2.Infrastructure.Configurations;
+
 
 namespace Infrastructure.Persestens;
 
