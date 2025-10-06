@@ -32,7 +32,8 @@ public class CardRepository(AppDbContext context) : ICardRepository
                 CardNumber = x.CardNumber,
                 IsActive = x.IsActive,
                 LastTransferDate = x.LastTransferDate,
-                DailyTransferAmount = x.DailyTransferAmount
+                DailyTransferAmount = x.DailyTransferAmount,
+                PersonName = x.PersonName
             }).FirstOrDefault();
     }
 

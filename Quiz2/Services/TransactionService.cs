@@ -88,10 +88,8 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
                 throw new Exception("The source card is not active.");
 
             var today =DateTime.Now;
-            if (sourceCard.LastTransferDate != today)
-            {
+            if (sourceCard.LastTransferDate?.Date != DateTime.Today)
                 sourceCard.DailyTransferAmount = 0;
-            }
 
             if (sourceCard.DailyTransferAmount + amount > dailyLimit)
                 throw new Exception("Daily transfer limit exceeded.");
@@ -101,10 +99,10 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
 
             //fee
             if (amount > 1000)
-                sourceCard.Balance -= amount + 1.5f * amount;
+                sourceCard.Balance -= amount + 0.015f * amount;
             
             else
-                sourceCard.Balance -= amount + 0.5f * amount;
+                sourceCard.Balance -= amount + 0.005f * amount;
             _cardService.UpdateBalance(sourceCardNumber, sourceCard.Balance);
 
             //fix update

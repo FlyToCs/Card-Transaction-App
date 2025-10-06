@@ -146,20 +146,56 @@ void TransactionMenu()
             switch (select)
             {
                 case "💸 Transfer Money":
+                {
+                    var destinationCardNumber = AnsiConsole.Ask<string>("[yellow]Enter destination Card:[/]");
+                    var amount = AnsiConsole.Ask<float>("[yellow]Enter amount:[/]");
+
+                    if (amount <= 0)
                     {
-                        var destinationCard = AnsiConsole.Ask<string>("[yellow]Enter destination Card:[/]");
-                        var amount = AnsiConsole.Ask<float>("[yellow]Enter amount:[/]");
-
-                        var result = transactionService.TransferMoney(currentCard.CardNumber, destinationCard, amount);
-
-                        if (result)
-                            AnsiConsole.MarkupLine("[bold green]✔ The operation finished successfully![/]");
-                        else
-                            AnsiConsole.MarkupLine("[bold red]✘ Failed to complete the operation.[/]");
-
+                        AnsiConsole.MarkupLine("[bold red]✘ Amount must be greater than 0![/]");
                         Console.ReadKey();
                         break;
                     }
+
+                    var destinationCard = cardService.GetCardDetails(destinationCardNumber);
+
+                    float feePercent = amount > 1000 ? 0.015f : 0.005f;
+                    float fee = amount * feePercent;
+                    float totalDeduction = amount + fee;
+
+                    var table = new Table().Border(TableBorder.Rounded);
+                    table.AddColumn("Field");
+                    table.AddColumn("Value");
+
+                    table.AddRow("To (card)", destinationCard.CardNumber);
+                    table.AddRow("Recipient name", destinationCard.PersonName ?? "-");
+
+                    table.AddRow("Amount", $"{amount:0.00}");
+                    table.AddRow("Fee (%)", $"{feePercent * 100:0.##}%");
+                    table.AddRow("Fee (Amount)", $"{fee:0.00}");
+                    table.AddRow("Total Deducted", $"{totalDeduction:0.00}");
+
+                    AnsiConsole.Write(table);
+
+                    bool confirm = AnsiConsole.Confirm("[green]Do you want to proceed with this transfer?[/]");
+                    if (!confirm)
+                    {
+                        AnsiConsole.MarkupLine("[yellow]Transfer cancelled by user.[/]");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    var result = transactionService.TransferMoney(currentCard.CardNumber, destinationCardNumber, amount);
+
+                    AnsiConsole.MarkupLine(result
+                        ? "[bold green]✔ The operation finished successfully![/]"
+                        : "[bold red]✘ Failed to complete the operation.[/]");
+
+                    Console.ReadKey();
+                    break;
+                }
+
+
 
                 case "📑 Show Transactions":
                     {
