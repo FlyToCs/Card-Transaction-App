@@ -71,7 +71,7 @@ public class CardService(ICardRepository cardRepository) : ICardService
         return _cardRepository.GetCardLoginAttempt(cardNumber);
     }
 
-    public DateTime GetLastLoginTime(string cardNumber)
+    public DateTime? GetLastLoginTime(string cardNumber)
     {
         return _cardRepository.GetLastLoginTime(cardNumber);
     }

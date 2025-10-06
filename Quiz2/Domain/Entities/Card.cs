@@ -11,7 +11,7 @@ public class Card
     public bool IsActive { get; set; }
     public float DailyTransferAmount { get; set; }
     public int LoginAttempts { get; set; }
-    public DateTime LastLoginTime { get; set; }
+    public DateTime? LastLoginTime { get; set; }
     public DateOnly LastTransferDate { get; set; }
     public List<Transaction> SourceTransactions { get; set; } = [];
     public List<Transaction> DestinationTransactions { get; set; } = [];

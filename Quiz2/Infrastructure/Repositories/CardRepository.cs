@@ -70,12 +70,12 @@ public class CardRepository(AppDbContext context) :  ICardRepository
             .First();
     }
 
-    public DateTime GetLastLoginTime(string cardNumber)
+    public DateTime? GetLastLoginTime(string cardNumber)
     {
         return context.Cards
             .Where(c => c.CardNumber == cardNumber)
             .Select(c => c.LastLoginTime)
-            .First();
+            .FirstOrDefault();
     }
 
     public void UpdateLoginData(CardLoginUpdateDto dto)

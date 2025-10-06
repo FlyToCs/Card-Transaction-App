@@ -12,7 +12,7 @@ public interface ICardRepository
     bool CardIsActive(string cardNumber);
     float GetCardBalance(string cardNumber);
     int GetCardLoginAttempt(string cardNumber);
-    DateTime GetLastLoginTime(string cardNumber);
+    DateTime? GetLastLoginTime(string cardNumber);
     void UpdateLoginData(CardLoginUpdateDto cardLoginUpdateDto);
     void UpdateLoginAttempts(string cardNumber,int attempt);
     void UpdateCardPassword(string cardNumber, string password);

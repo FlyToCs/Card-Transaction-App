@@ -17,7 +17,7 @@ public interface ICardService
     void UpdateLastLoginTime(string cardNumber, DateTime datetime);
     void UpdateDailyTransferAmount(string cardNumber, float amount);
     int GetCardLoginAttempts(string cardNumber);
-    DateTime GetLastLoginTime(string cardNumber);
+    DateTime? GetLastLoginTime(string cardNumber);
     void UpdateLoginAttempts(string cardNumber, int attempt);
     void UpdateBalance(string cardNumber, float amount);
     void ChangePassword(string cardNumber, string newPass);
