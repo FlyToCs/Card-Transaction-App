@@ -87,7 +87,7 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
             if (!sourceCard.IsActive)
                 throw new Exception("The source card is not active.");
 
-            var today = DateOnly.FromDateTime(DateTime.Now);
+            var today =DateTime.Now;
             if (sourceCard.LastTransferDate != today)
             {
                 sourceCard.DailyTransferAmount = 0;

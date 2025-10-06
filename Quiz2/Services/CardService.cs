@@ -46,7 +46,7 @@ public class CardService(ICardRepository cardRepository) : ICardService
         return _cardRepository.GetCardBalance(cardNumber);
     }
 
-    public void UpdateLastTransferDate(string cardNumber, DateOnly dateOnly)
+    public void UpdateLastTransferDate(string cardNumber, DateTime dateOnly)
     {
         _cardRepository.UpdateLastTransferDate(cardNumber, dateOnly);
     }

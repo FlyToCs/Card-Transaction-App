@@ -16,7 +16,7 @@ public interface ICardRepository
     void UpdateLoginData(CardLoginUpdateDto cardLoginUpdateDto);
     void UpdateLoginAttempts(string cardNumber,int attempt);
     void UpdateCardPassword(string cardNumber, string password);
-    void UpdateLastTransferDate(string cardNumber, DateOnly dateOnly);
+    void UpdateLastTransferDate(string cardNumber, DateTime dateOnly);
     void UpdateLastLoginTime(string cardNumber, DateTime datetime);
     void UpdateDailyTransferAmount(string cardNumber, float amount);
     void UpdateBalance(string cardNumber, float amount);

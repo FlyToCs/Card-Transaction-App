@@ -12,7 +12,7 @@ public interface ICardService
     bool CardExist(string cardNumber, string password);
     bool CardIsActive(string cardNumber);
     float GetCardBalance(string cardNumber);
-    void UpdateLastTransferDate(string cardNumber, DateOnly dateOnly);
+    void UpdateLastTransferDate(string cardNumber, DateTime dateOnly);
     void UpdateLoginData(CardLoginUpdateDto cardLoginUpdateDto);
     void UpdateLastLoginTime(string cardNumber, DateTime datetime);
     void UpdateDailyTransferAmount(string cardNumber, float amount);

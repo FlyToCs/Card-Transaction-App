@@ -111,7 +111,7 @@ public class CardRepository(AppDbContext context) :  ICardRepository
                 .SetProperty(c => c.Password, password));
     }
 
-    public void UpdateLastTransferDate(string cardNumber, DateOnly dateOnly)
+    public void UpdateLastTransferDate(string cardNumber, DateTime dateOnly)
     {
         context.Cards
             .Where(c => c.CardNumber == cardNumber)
