@@ -154,14 +154,68 @@ void TransactionMenu()
                         var code = verificationService.Create();
                         var destinationCardNumber = AnsiConsole.Ask<string>("[yellow]Enter destination Card:[/]");
                         var amount = AnsiConsole.Ask<float>("[yellow]Enter amount:[/]");
-                        var verificationCode = AnsiConsole.Ask<int>("[yellow]Enter VerificationCode:[/]");
 
-                        if (verificationCode != code.Code ||
-                            (code.CreationDate - DateTime.Now).TotalSeconds > 20)
+                        Console.Clear();
+                        AnsiConsole.MarkupLine("[bold yellow]Verification code sent![/]");
+                        Console.WriteLine();
+
+                        int remainingSeconds = 20;
+                        bool codeEntered = false;
+                        bool expired = false;
+                        object locker = new();
+
+                       
+                        Thread timerThread = new(() =>
                         {
-                            throw new Exception("code not valid");
+                            while (remainingSeconds >= 0)
+                            {
+                                lock (locker)
+                                {
+                                    if (codeEntered) return;
+
+                                    Console.SetCursorPosition(0, 3);
+                                    string color =
+                                        remainingSeconds > 10 ? "green" :
+                                        remainingSeconds > 5 ? "yellow" : "red";
+
+                                    AnsiConsole.Markup($"[bold {color}]⏳ Time left: {remainingSeconds,2} seconds[/]  ");
+                                }
+
+                                Thread.Sleep(1000);
+                                remainingSeconds--;
+                            }
+
+                            lock (locker)
+                            {
+                                if (!codeEntered)
+                                    expired = true;
+                            }
+                        });
+                        timerThread.Start();
+
+                        Console.Write("\nEnter Verification Code: ");
+                        string? input = Console.ReadLine();
+
+                        lock (locker)
+                        {
+                            codeEntered = true;
                         }
 
+                        
+                        Console.SetCursorPosition(0, 3);
+                        Console.Write(new string(' ', Console.WindowWidth));
+                        Console.SetCursorPosition(0, 3);
+
+                        if (expired)
+                            throw new Exception("⛔ Verification code expired!");
+
+                        if (!int.TryParse(input, out int verificationCode))
+                            throw new Exception("Invalid input!");
+
+                        if (verificationCode != code.Code)
+                            throw new Exception("❌ Invalid verification code!");
+
+                        AnsiConsole.MarkupLine("\n[bold green]✔ Code verified successfully![/]");
 
                         if (amount <= 0)
                         {
@@ -179,10 +233,8 @@ void TransactionMenu()
                         var table = new Table().Border(TableBorder.Rounded);
                         table.AddColumn("Field");
                         table.AddColumn("Value");
-
                         table.AddRow("To (card)", destinationCard.CardNumber);
                         table.AddRow("Recipient name", destinationCard.PersonName ?? "-");
-
                         table.AddRow("Amount", $"{amount:0.00}");
                         table.AddRow("Fee (%)", $"{feePercent * 100:0.##}%");
                         table.AddRow("Fee (Amount)", $"{fee:0.00}");
@@ -207,6 +259,7 @@ void TransactionMenu()
                         Console.ReadKey();
                         break;
                     }
+
 
 
 
