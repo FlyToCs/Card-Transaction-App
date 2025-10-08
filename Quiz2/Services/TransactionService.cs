@@ -125,7 +125,7 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
 
             _context.Transactions.Add(transaction);
 
-            _context.SaveChanges();
+            //_context.SaveChanges();
             dbTransaction.Commit();
 
             return true;

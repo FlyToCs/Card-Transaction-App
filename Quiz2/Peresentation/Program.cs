@@ -8,6 +8,7 @@ using Spectre.Console;
 using Infrastructure.Persestens;
 using DTOs;
 using Extensions;
+using Infrastructure.Json_Repository;
 using Infrastructure.Repositories;
 using Services;
 
@@ -17,10 +18,12 @@ AppDbContext context = new AppDbContext();
 
 ICardRepository cardRepository = new CardRepository(context);
 ITransactionRepository transactionRepository = new TransactionRepository(context);
+IVerificationRepository verificationRepository = new VerificationRepository(@"D:\VerificationCode.json");
 
 ICardService cardService = new CardService(cardRepository);
-ITransactionService transactionService = new TransactionService(transactionRepository, cardService,context);
+ITransactionService transactionService = new TransactionService(transactionRepository, cardService, context);
 IAuthenticationService authenticationService = new AuthenticationService(cardService);
+IVerificationService verificationService = new VerificationService(verificationRepository);
 
 
 Console.WriteLine("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⢀⠀⠀⠀⠀⠀\r\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠁⠜⡟⢲⡄⠀⠀\r\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡆⢎⠎⡠⠋⡨⠦⡄\r\n⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⢤⡤⠤⢤⣀⣧⢄⣈⣀⣁⡀⠔⠁\r\n⠀⠀⠀⠀⠀⠀⣠⠴⡇⠀⢸⠁⠀⢸⡇⢹⣶⡋⠀⠀⠀⠀⠀\r\n⠀⠀⠀⠀⢀⡔⠁⠸⡇⠀⠈⡇⠀⢸⡇⢸⡇⢳⠀⠀⠀⠀⠀\r\n⠀⠀⠀⢠⢻⡇⠀⠀⡇⠀⢀⠇⠀⣶⠃⢸⡇⢸⠀⠀⠀⠀⠀\r\n⠀⠀⠀⡗⢸⡇⠀⣷⠃⠀⣼⠀⠀⣿⠀⠘⣇⡜⠀⠀⠀⠀⠀\r\n⠀⠀⠸⡇⠈⡇⠀⣿⠀⠀⣿⠀⠀⣿⠀⢠⠟⠀⠀⠀⠀⠀⠀\r\n⠀⠀⠀⠱⣴⠇⠀⡇⠀⠀⢻⠀⠀⣟⡴⠁⠀⠀⠀⠀⠀⠀⠀\r\n⠀⠀⠀⣠⣏⡑⣼⡇⠀⠀⢈⣀⠔⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀\r\n⠀⡠⡾⠡⢩⣿⠁⠈⠁⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\r\n⠰⢱⢁⠃⢸⠘⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\r\n⢇⣨⡈⢀⠈⠀⢱⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\r\n⠀⠀⠈⠁⠑⠂⠜⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
@@ -99,7 +102,7 @@ void AuthenticationMenu()
                     var card = cardService.GetCardByCardNumber(cardNumber);
 
 
-                    
+
                     TransactionMenu();
                     break;
 
@@ -147,54 +150,63 @@ void TransactionMenu()
             switch (select)
             {
                 case "💸 Transfer Money":
-                {
-                    var destinationCardNumber = AnsiConsole.Ask<string>("[yellow]Enter destination Card:[/]");
-                    var amount = AnsiConsole.Ask<float>("[yellow]Enter amount:[/]");
-
-                    if (amount <= 0)
                     {
-                        AnsiConsole.MarkupLine("[bold red]✘ Amount must be greater than 0![/]");
+                        var code = verificationService.Create();
+                        var destinationCardNumber = AnsiConsole.Ask<string>("[yellow]Enter destination Card:[/]");
+                        var amount = AnsiConsole.Ask<float>("[yellow]Enter amount:[/]");
+                        var verificationCode = AnsiConsole.Ask<int>("[yellow]Enter VerificationCode:[/]");
+
+                        if (verificationCode != code.Code ||
+                            (code.CreationDate - DateTime.Now).TotalSeconds > 20)
+                        {
+                            throw new Exception("code not valid");
+                        }
+
+
+                        if (amount <= 0)
+                        {
+                            AnsiConsole.MarkupLine("[bold red]✘ Amount must be greater than 0![/]");
+                            Console.ReadKey();
+                            break;
+                        }
+
+                        var destinationCard = cardService.GetCardDetails(destinationCardNumber);
+
+                        float feePercent = amount > 1000 ? 0.015f : 0.005f;
+                        float fee = amount * feePercent;
+                        float totalDeduction = amount + fee;
+
+                        var table = new Table().Border(TableBorder.Rounded);
+                        table.AddColumn("Field");
+                        table.AddColumn("Value");
+
+                        table.AddRow("To (card)", destinationCard.CardNumber);
+                        table.AddRow("Recipient name", destinationCard.PersonName ?? "-");
+
+                        table.AddRow("Amount", $"{amount:0.00}");
+                        table.AddRow("Fee (%)", $"{feePercent * 100:0.##}%");
+                        table.AddRow("Fee (Amount)", $"{fee:0.00}");
+                        table.AddRow("Total Deducted", $"{totalDeduction:0.00}");
+
+                        AnsiConsole.Write(table);
+
+                        bool confirm = AnsiConsole.Confirm("[green]Do you want to proceed with this transfer?[/]");
+                        if (!confirm)
+                        {
+                            AnsiConsole.MarkupLine("[yellow]Transfer cancelled by user.[/]");
+                            Console.ReadKey();
+                            break;
+                        }
+
+                        var result = transactionService.TransferMoney(currentCard.CardNumber, destinationCardNumber, amount);
+
+                        AnsiConsole.MarkupLine(result
+                            ? "[bold green]✔ The operation finished successfully![/]"
+                            : "[bold red]✘ Failed to complete the operation.[/]");
+
                         Console.ReadKey();
                         break;
                     }
-
-                    var destinationCard = cardService.GetCardDetails(destinationCardNumber);
-
-                    float feePercent = amount > 1000 ? 0.015f : 0.005f;
-                    float fee = amount * feePercent;
-                    float totalDeduction = amount + fee;
-
-                    var table = new Table().Border(TableBorder.Rounded);
-                    table.AddColumn("Field");
-                    table.AddColumn("Value");
-
-                    table.AddRow("To (card)", destinationCard.CardNumber);
-                    table.AddRow("Recipient name", destinationCard.PersonName ?? "-");
-
-                    table.AddRow("Amount", $"{amount:0.00}");
-                    table.AddRow("Fee (%)", $"{feePercent * 100:0.##}%");
-                    table.AddRow("Fee (Amount)", $"{fee:0.00}");
-                    table.AddRow("Total Deducted", $"{totalDeduction:0.00}");
-
-                    AnsiConsole.Write(table);
-
-                    bool confirm = AnsiConsole.Confirm("[green]Do you want to proceed with this transfer?[/]");
-                    if (!confirm)
-                    {
-                        AnsiConsole.MarkupLine("[yellow]Transfer cancelled by user.[/]");
-                        Console.ReadKey();
-                        break;
-                    }
-
-                    var result = transactionService.TransferMoney(currentCard.CardNumber, destinationCardNumber, amount);
-
-                    AnsiConsole.MarkupLine(result
-                        ? "[bold green]✔ The operation finished successfully![/]"
-                        : "[bold red]✘ Failed to complete the operation.[/]");
-
-                    Console.ReadKey();
-                    break;
-                }
 
 
 
@@ -237,7 +249,7 @@ void TransactionMenu()
                     }
 
                 case "🔑 Change Password":
-                    
+
                     var newPassword = AnsiConsole.Ask<string>("[yellow]Enter new pass: [/]");
 
                     cardService.ChangePassword(currentCard.CardNumber, newPassword);
