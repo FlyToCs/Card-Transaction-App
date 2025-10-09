@@ -118,6 +118,8 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
 
             var transaction = new Transaction()
             {
+                DestinationAccountId = sourceCard.Id,
+                SourceAccountId = destinationCard.Id,
                 Amount = amount,
                 IsSuccessful = true,
                 TransactionDate = DateTime.UtcNow
@@ -125,7 +127,7 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
 
             _context.Transactions.Add(transaction);
 
-            //_context.SaveChanges();
+            _context.SaveChanges();
             dbTransaction.Commit();
 
             return true;

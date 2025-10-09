@@ -4,6 +4,7 @@ namespace DTOs;
 
 public class GetCardDetailsDto
 {
+    public int Id { get; set; }
     public string CardNumber { get; set; }
     public string PersonName { get; set; }
     public float Balance { get; set; }

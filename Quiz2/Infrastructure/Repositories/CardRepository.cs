@@ -28,6 +28,7 @@ public class CardRepository(AppDbContext context) : ICardRepository
             .Where(c => c.CardNumber == cardNumber)
             .Select(x => new GetCardDetailsDto()
             {
+                Id = x.Id,
                 Balance = x.Balance,
                 CardNumber = x.CardNumber,
                 IsActive = x.IsActive,
