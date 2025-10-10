@@ -155,6 +155,10 @@ void TransactionMenu()
                         var destinationCardNumber = AnsiConsole.Ask<string>("[yellow]Enter destination Card:[/]");
                         var amount = AnsiConsole.Ask<float>("[yellow]Enter amount:[/]");
 
+                        if (currentCard.CardNumber == destinationCardNumber)
+                            throw new Exception("You can't transfer money to your card");
+                        
+
                         Console.Clear();
                         AnsiConsole.MarkupLine("[bold yellow]Verification code sent![/]");
                         Console.WriteLine();

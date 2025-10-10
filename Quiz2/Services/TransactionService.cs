@@ -87,6 +87,10 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
             if (!sourceCard.IsActive)
                 throw new Exception("The source card is not active.");
 
+            if (sourceCard.CardNumber == destinationCard.CardNumber)
+                throw new Exception("you can't transfer money to your card");
+            
+
             var today =DateTime.Now;
             if (sourceCard.LastTransferDate?.Date != DateTime.Today)
                 sourceCard.DailyTransferAmount = 0;
