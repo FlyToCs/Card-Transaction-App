@@ -107,9 +107,12 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
             
             else
                 sourceCard.Balance -= amount + 0.005f * amount;
-            _cardService.UpdateBalance(sourceCardNumber, sourceCard.Balance);
+
 
             //fix update
+
+            _cardService.UpdateBalance(sourceCardNumber, sourceCard.Balance);
+
             sourceCard.DailyTransferAmount += amount;
             _cardService.UpdateDailyTransferAmount(sourceCard.CardNumber, sourceCard.DailyTransferAmount);
 
@@ -119,6 +122,7 @@ public class TransactionService(ITransactionRepository transactionRepository, IC
             destinationCard.Balance += amount;
             _cardService.UpdateBalance(destinationCardNumber, destinationCard.Balance);
 
+            _cardService.SaveChanges();
 
             var transaction = new Transaction()
             {

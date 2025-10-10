@@ -14,4 +14,5 @@ public interface ICardService
     void UpdateDailyTransferAmount(string cardNumber, float amount);
     void UpdateBalance(string cardNumber, float amount);
     void ChangePassword(string cardNumber, string newPass);
+    void SaveChanges();
 }

@@ -2,6 +2,7 @@
 using Infrastructure.Persestens;
 using Microsoft.EntityFrameworkCore;
 using Quiz2.Contracts.Repository_Interfaces;
+using System;
 
 
 namespace Infrastructure.Repositories;
@@ -118,12 +119,17 @@ public class CardRepository(AppDbContext context) : ICardRepository
                 .SetProperty(c => c.Password, password));
     }
 
-    public void UpdateLastTransferDate(string cardNumber, DateTime dateOnly)
+    public void UpdateLastTransferDate2(string cardNumber, DateTime dateOnly)
     {
         context.Cards
             .Where(c => c.CardNumber == cardNumber)
             .ExecuteUpdate(setter => setter
                 .SetProperty(c => c.LastTransferDate, dateOnly));
+    }
+    public void UpdateLastTransferDate(string cardNumber, DateTime dateOnly)
+    {
+        var card = context.Cards.First(c => c.CardNumber == cardNumber);
+        card.LastTransferDate = dateOnly;
     }
 
     public void UpdateLastLoginTime(string cardNumber, DateTime datetime)
@@ -134,19 +140,35 @@ public class CardRepository(AppDbContext context) : ICardRepository
                 .SetProperty(c => c.LastLoginTime, datetime));
     }
 
-    public void UpdateDailyTransferAmount(string cardNumber, float amount)
+    public void UpdateDailyTransferAmount2(string cardNumber, float amount)
     {
         context.Cards
             .Where(c => c.CardNumber == cardNumber)
             .ExecuteUpdate(setter => setter
                 .SetProperty(c => c.DailyTransferAmount, amount));
     }
+    public void UpdateDailyTransferAmount(string cardNumber, float amount)
+    {
+        var card = context.Cards.First(c => c.CardNumber == cardNumber);
+        card.DailyTransferAmount = amount;
+    }
 
-    public void UpdateBalance(string cardNumber, float amount)
+    public void UpdateBalance2(string cardNumber, float amount)
     {
         context.Cards
             .Where(c => c.CardNumber == cardNumber)
             .ExecuteUpdate(setter => setter
                 .SetProperty(c => c.Balance, amount));
+    }
+
+    public void SaveChanges()
+    {
+        context.SaveChanges();
+    }
+
+    public void UpdateBalance(string cardNumber, float amount)
+    {
+        var card = context.Cards.First(c => c.CardNumber == cardNumber);
+        card.Balance = amount;
     }
 }

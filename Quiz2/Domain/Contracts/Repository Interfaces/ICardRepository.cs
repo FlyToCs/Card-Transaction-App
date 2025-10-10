@@ -20,5 +20,6 @@ public interface ICardRepository
     void UpdateLastLoginTime(string cardNumber, DateTime datetime);
     void UpdateDailyTransferAmount(string cardNumber, float amount);
     void UpdateBalance(string cardNumber, float amount);
+    void SaveChanges();
 
 }

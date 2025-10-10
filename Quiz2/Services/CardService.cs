@@ -69,5 +69,8 @@ public class CardService(ICardRepository cardRepository) : ICardService
         _cardRepository.UpdateCardPassword(cardNumber, newPass);
     }
 
-
+    public void SaveChanges()
+    {
+        _cardRepository.SaveChanges();
+    }
 }
